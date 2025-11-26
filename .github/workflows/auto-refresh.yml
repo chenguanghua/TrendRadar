@@ -1,0 +1,35 @@
+name: 每30分钟自动更新Pages
+on:
+  # 定时触发：每30分钟执行一次（UTC时间）
+  schedule:
+    - cron: "0/30 * * * *"  # 语法：分 时 日 月 周，0/30表示每30分钟（0分、30分）
+  # 可选：允许手动触发（方便测试）
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 拉取仓库代码
+      - name:  checkout代码
+        uses: actions/checkout@v4
+
+      # 2. 核心步骤：更新页面内容（根据你的场景修改）
+      - name: 更新内容（示例：生成新数据报表）
+        run: |
+          # 这里替换为你的实际操作（如调用API、运行脚本生成HTML等）
+          # 示例1：用Python更新数据
+          # pip install requests
+          # python update_data.py  # 该脚本会生成/更新dist目录下的HTML
+          # 示例2：调用外部API刷新数据
+          # curl -X GET https://api.example.com/get-latest-data > ./data.json
+          # 示例3：如果是Jekyll/Hugo博客，重新构建
+          # bundle exec jekyll build  # Jekyll
+          # hugo build  # Hugo
+
+      # 3. 部署到GitHub Pages
+      - name: 部署到Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # 自动生成，无需手动配置
+          publish_dir: ./dist  # 替换为你的页面输出目录（如./_site、./public）
